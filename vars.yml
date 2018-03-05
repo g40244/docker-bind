@@ -1,0 +1,16 @@
+container_name: bind
+domain: vsphere.local
+network: 192.168.1.0
+records:
+-
+  hostname: "vCenter"
+  ipaddr: "192.168.1.101"
+-
+  hostname: "ESXi01"
+  ipaddr: "192.168.1.1"
+-
+  hostname: "ESXi02"
+  ipaddr: "192.168.1.2"
+-
+  hostname: "ESXi03"
+  ipaddr: "192.168.1.3"
