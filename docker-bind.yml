@@ -1,0 +1,47 @@
+### docker host have to run 'pip install docker'
+### docker host have image 'centos:bind'
+- hosts: docker
+  gather_facts: false
+  vars_files:
+    - vars.yml
+  vars:
+    arpa: "{{ network | ipaddr('revdns') | regex_replace('^0.') | regex_replace('.$') }}"
+  tasks:
+    - name: run docker-bind
+      docker_container:
+        name: "{{ container_name }}"
+        image: centos:bind
+        published_ports:
+          - "53:53/udp"
+          - "53:53/tcp"
+        command: ["{{ domain }}", "{{ arpa }}"]
+
+- hosts: localhost
+  gather_facts: false
+  vars_files:
+    - vars.yml
+  vars:
+    arpa: "{{ network | ipaddr('revdns') | regex_replace('^0.') | regex_replace('.$') }}"
+    tmpaddr: "{{ network | regex_replace('0$') }}"
+  tasks:
+    - name: configure named A record
+      nsupdate:
+        key_name: "nsupdate"
+        key_secret: "nsupdate"
+        server: "172.17.0.1"
+        zone: "{{ domain }}"
+        record: "{{ item.hostname }}"
+        value: "{{ item.ipaddr }}"
+        type: "A"
+      with_items: "{{ records }}"
+
+    - name: configure named PTR record
+      nsupdate:
+        key_name: "nsupdate"
+        key_secret: "nsupdate"
+        server: "172.17.0.1"
+        zone: "{{ arpa }}"
+        record: "{{ item.ipaddr | regex_replace(tmpaddr) }}"
+        value: "{{ item.hostname | regex_replace('$', '.' + domain + '.') }}"
+        type: "PTR"
+      with_items: "{{ records }}"
