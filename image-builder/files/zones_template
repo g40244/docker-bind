@@ -1,0 +1,20 @@
+key "nsupdate" {
+        algorithm hmac-md5;
+        secret "nsupdate";
+};
+
+zone "domain" IN {
+        type master;
+        file "domain.zone";
+        allow-update {
+                key nsupdate;
+        };
+};
+
+zone "arpa" IN {
+        type master;
+        file "arpa.zone";
+        allow-update {
+                key nsupdate;
+        };
+};

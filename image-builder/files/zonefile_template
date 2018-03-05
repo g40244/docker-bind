@@ -1,0 +1,10 @@
+$TTL 3600        ; 1 hour
+@                   IN  SOA     localhost.domain. root.domain. (
+                                1000000000 ; serial
+                                3600       ; refresh (1 hour)
+                                900        ; retry (15 minutes)
+                                3600000    ; expire (5 weeks 6 days 16 hours)
+                                3600       ; minimum (1 hour)
+                                )
+                        NS      localhost.domain.
+localhost           IN  A       127.0.0.1
