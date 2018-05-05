@@ -6,9 +6,9 @@ MAINTAINER g40244 <gustav.uhia@gmail.com>
 RUN yum -y update && yum -y install bind && yum clean all
 
 # copy template file
-COPY ./file/zones_template /etc/named.template.zones
-COPY ./file/zonefile_template /var/named/template.zone
-COPY ./file/bind.sh /root/bind.sh
+COPY ./files/zones_template /etc/named.template.zones
+COPY ./files/zonefile_template /var/named/template.zone
+COPY ./files/bind.sh /root/bind.sh
 
 # config bind
 RUN sed -i --follow-symlinks '/listen-on/s/127.0.0.1/any/g' /etc/named.conf && \
